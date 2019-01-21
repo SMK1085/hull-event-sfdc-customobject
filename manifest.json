@@ -1,0 +1,184 @@
+{
+    "name": "Salesforce Event Custom Objects",
+    "tags": [
+        "outgoing",
+        "oneColumn",
+        "batch",
+        "smart-notifier"
+    ],
+    "description": "Send Hull events to Salesforce as a custom object",
+    "readme": "readme.md",
+    "admin": "/auth",
+    "tabs": [
+        {
+            "title": "Credentials",
+            "url": "/auth",
+            "size": "small",
+            "editable": false
+        }
+    ],
+    "version": "0.1.0",
+    "source": "salesforce",
+    "logo": "logo.png",
+    "ui": false,
+    "settings": [],
+    "private_settings": [
+        {
+            "name": "refresh_token",
+            "type": "string",
+            "format": "hidden"
+        },
+        {
+            "name": "access_token",
+            "type": "string",
+            "format": "hidden"
+        },
+        {
+            "name": "instance_url",
+            "type": "string",
+            "format": "hidden"
+        },
+        {
+            "name": "heading_connectivity",
+            "type": "string",
+            "format": "title",
+            "title": "Salesforce Connectivity"
+        },
+        {
+            "name": "client_id",
+            "title": "Client ID",
+            "type": "string"
+        },
+        {
+            "name": "client_secret",
+            "title": "Client Secret",
+            "type": "string"
+        },
+        {
+            "name": "heading_objectselection",
+            "type": "string",
+            "format": "title",
+            "title": "Object Selection"
+        },
+        {
+            "name": "hull_event",
+            "title": "Hull Event",
+            "format": "event",
+            "type": "string"
+        },
+        {
+            "name": "salesforce_customobject",
+            "title": "Salesforce Custom Object",
+            "format": "select",
+            "type": "string",
+            "options": {
+                "loadOptions": "/schema/customobjects"
+            }
+        },
+        {
+            "name": "heading_identity",
+            "type": "string",
+            "format": "title",
+            "title": "Identity Resolution"
+        },
+        {
+            "name": "hull_event_id",
+            "title": "Hull Event ID",
+            "type": "string"
+        },
+        {
+            "name": "salesforce_customobject_id",
+            "title": "Salesforce Custom Object ID",
+            "format": "select",
+            "type": "string",
+            "options": {
+                "loadOptions": "/schema/fields/unique"
+            },
+            "description": "The unique field in Salesforce which is used to avoid duplicates. This field must be updateable."
+        },
+        {
+            "name": "heading_references",
+            "type": "string",
+            "format": "title",
+            "title": "Reference Mapping"
+        },
+        {
+            "name" : "references_outbound",
+            "title" : "List of reference properties to send from Hull to Salesforce",
+            "type" : "array",
+            "format" : "table",
+            "items" : {
+                "type" : "object",
+                "properties" : {
+                  "hull_field_name" : {
+                    "type" : "string",
+                    "format" : "trait",
+                    "title" : "Hull Property"
+                  },
+                  "salesforce_field_name" : {
+                    "type" : "string",
+                    "title" : "Salesforce Field",
+                    "format" : "select",
+                    "options" : {
+                      "loadOptions" : "/schema/fields/reference"
+                    }
+                  }
+                }
+            }
+        },
+        {
+            "name": "heading_mapping",
+            "type": "string",
+            "format": "title",
+            "title": "Object Mapping"
+        },
+        {
+            "name" : "attributes_outbound",
+            "title" : "List of properties to send from Hull to Salesforce",
+            "type" : "array",
+            "format" : "table",
+            "items" : {
+                "type" : "object",
+                "properties" : {
+                  "hull_field_name" : {
+                    "type" : "string",
+                    "format" : "string",
+                    "title" : "Hull Property"
+                  },
+                  "salesforce_field_name" : {
+                    "type" : "string",
+                    "title" : "Salesforce Field",
+                    "format" : "select",
+                    "options" : {
+                      "loadOptions" : "/schema/fields/updateable"
+                    }
+                  }
+                }
+            }
+        },
+        {
+            "name": "salesforce_oauth_url",
+            "title": "Salesforce Login Url",
+            "type": "string",
+            "default": "https://login.salesforce.com",
+            "description": "Use 'https://login.salesforce.com' to connect to your production environment. See instructions how to connect to a sandbox environment."
+        }
+    ],
+    "schedules": [],
+    "subscriptions": [
+        {
+            "url": "/smart-notifier",
+            "conditions": {
+                "channels": {
+                    "only": [
+                        "user:update",
+                        "ship:update",
+                        "users_segment:update",
+                        "accounts_segment:update",
+                        "segment:update"
+                    ]
+                }
+            }
+        }
+    ]
+}
