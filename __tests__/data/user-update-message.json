@@ -1,0 +1,595 @@
+{
+    "notification_id": "9739e5dc-db64-4808-bd12-648a242c389e",
+    "configuration": {
+        "id": "9c99e0909df9999999999b9a",
+        "organization": "unittest.hullapp.io",
+        "secret": "e99bec00000c9bb9900000c00b0f0e99"
+    },
+    "connector": {
+        "tags": [],
+        "source_url": "https://hull-salesforce-event-cobject.ngrok.io/",
+        "private_settings": {
+            "salesforce_customobject": "Multi_Touch_Channel__c",
+            "hull_event_id": "id",
+            "access_token": "00AB0000000zCCy!ABzABCDx9AsRUjmTFqNGYTCOouj7Y5iGJ6vKQ.XlArckubABCfMmkn0xE9ApZ5uv_ABC.z99abCx0VAru17CHGROP1GWPDP_",
+            "refresh_token": "0Azy999xBwCvutDE99EUWeiwCAAJS0FWF0VaS5mV.aXYZRbVTT9tTtiBTfG9v3n_ai0.ab9zxCxQ9SabbUnf4ABC",
+            "hull_event": "Session started",
+            "salesforce_customobject_id": "Hull_Session_ID__c",
+            "instance_url": "https://test.my.salesforce.com",
+            "attributes_outbound": [
+                {
+                    "hull_field_name": "created_at",
+                    "salesforce_field_name": "Session_Start_Time__c"
+                },
+                {
+                    "hull_field_name": "id",
+                    "salesforce_field_name": "Hull_Session_ID__c"
+                },
+                {
+                    "hull_field_name": "properties.utm_medium",
+                    "salesforce_field_name": "utm_medium__c"
+                },
+                {
+                    "hull_field_name": "properties.pi_campaign_id",
+                    "salesforce_field_name": "pi_campaign_id__c"
+                },
+                {
+                    "hull_field_name": "properties.utm_source",
+                    "salesforce_field_name": "utm_source__c"
+                },
+                {
+                    "hull_field_name": "properties.utm_campaign",
+                    "salesforce_field_name": "utm_campaign__c"
+                },
+                {
+                    "hull_field_name": "properties.utm_term",
+                    "salesforce_field_name": "utm_term__c"
+                },
+                {
+                    "hull_field_name": "properties.referrer",
+                    "salesforce_field_name": "referrer__c"
+                },
+                {
+                    "hull_field_name": "properties.gclid",
+                    "salesforce_field_name": "Google_Ads_CID__c"
+                },
+                {
+                    "hull_field_name": "properties.initial_url",
+                    "salesforce_field_name": "initial_url__c"
+                }
+            ],
+            "salesforce_login": "test@hull-automatedtest.io",
+            "references_outbound": [
+                {
+                    "hull_field_name": "traits_salesforce_lead/id",
+                    "salesforce_field_name": "Lead_id__c"
+                },
+                {
+                    "hull_field_name": "traits_salesforce_contact/id",
+                    "salesforce_field_name": "Contact_id__c"
+                },
+                {
+                    "hull_field_name": "traits_salesforce_contact/account_id",
+                    "salesforce_field_name": "Account_id__c"
+                }
+            ],
+            "client_id": "9ABC9y0x0000DxyzwE0kS00hedB0Iud99B99HKktb00egfHifkzwubix_pBx0GQQzqPEq00a0zhkxVlnIn9yt",
+            "salesforce_oauth_url": "https://login.salesforce.com",
+            "client_secret": "9999999999999999999"
+        },
+        "index": "https://hull-salesforce-event-cobject.ngrok.io/",
+        "name": "Hull Custom Objects to Salesforce",
+        "extra": {},
+        "settings": {},
+        "type": "ship",
+        "manifest": {
+            "description": "Send Hull events to Salesforce as a custom object",
+            "tags": [
+                "outgoing",
+                "oneColumn",
+                "batch",
+                "smart-notifier"
+            ],
+            "private_settings": [
+                {
+                    "name": "refresh_token",
+                    "type": "string",
+                    "format": "hidden"
+                },
+                {
+                    "name": "access_token",
+                    "type": "string",
+                    "format": "hidden"
+                },
+                {
+                    "name": "instance_url",
+                    "type": "string",
+                    "format": "hidden"
+                },
+                {
+                    "name": "heading_connectivity",
+                    "type": "string",
+                    "format": "title",
+                    "title": "Salesforce Connectivity"
+                },
+                {
+                    "name": "client_id",
+                    "title": "Client ID",
+                    "type": "string"
+                },
+                {
+                    "name": "client_secret",
+                    "title": "Client Secret",
+                    "type": "string"
+                },
+                {
+                    "name": "heading_objectselection",
+                    "type": "string",
+                    "format": "title",
+                    "title": "Object Selection"
+                },
+                {
+                    "name": "hull_event",
+                    "title": "Hull Event",
+                    "format": "event",
+                    "type": "string"
+                },
+                {
+                    "name": "salesforce_customobject",
+                    "title": "Salesforce Custom Object",
+                    "format": "select",
+                    "type": "string",
+                    "options": {
+                        "loadOptions": "/schema/customobjects"
+                    }
+                },
+                {
+                    "name": "heading_identity",
+                    "type": "string",
+                    "format": "title",
+                    "title": "Identity Resolution"
+                },
+                {
+                    "name": "hull_event_id",
+                    "title": "Hull Event ID",
+                    "type": "string"
+                },
+                {
+                    "name": "salesforce_customobject_id",
+                    "title": "Salesforce Custom Object ID",
+                    "format": "select",
+                    "type": "string",
+                    "options": {
+                        "loadOptions": "/schema/fields/unique"
+                    },
+                    "description": "The unique field in Salesforce which is used to avoid duplicates. This field must be updateable."
+                },
+                {
+                    "name": "heading_references",
+                    "type": "string",
+                    "format": "title",
+                    "title": "Reference Mapping"
+                },
+                {
+                    "name": "references_outbound",
+                    "title": "List of reference properties to send from Hull to Salesforce",
+                    "type": "array",
+                    "format": "table",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "hull_field_name": {
+                                "type": "string",
+                                "format": "trait",
+                                "title": "Hull Property"
+                            },
+                            "salesforce_field_name": {
+                                "type": "string",
+                                "title": "Salesforce Field",
+                                "format": "select",
+                                "options": {
+                                    "loadOptions": "/schema/fields/reference"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "heading_mapping",
+                    "type": "string",
+                    "format": "title",
+                    "title": "Object Mapping"
+                },
+                {
+                    "name": "attributes_outbound",
+                    "title": "List of properties to send from Hull to Salesforce",
+                    "type": "array",
+                    "format": "table",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "hull_field_name": {
+                                "type": "string",
+                                "format": "string",
+                                "title": "Hull Property"
+                            },
+                            "salesforce_field_name": {
+                                "type": "string",
+                                "title": "Salesforce Field",
+                                "format": "select",
+                                "options": {
+                                    "loadOptions": "/schema/fields/updateable"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "salesforce_oauth_url",
+                    "title": "Salesforce Login Url",
+                    "type": "string",
+                    "default": "https://login.salesforce.com",
+                    "description": "Use 'https://login.salesforce.com' to connect to your production environment. See instructions how to connect to a sandbox environment."
+                }
+            ],
+            "admin": "/auth",
+            "tabs": [
+                {
+                    "title": "Credentials",
+                    "url": "/auth",
+                    "size": "small",
+                    "editable": false
+                }
+            ],
+            "name": "Salesforce Event Custom Objects",
+            "settings": [],
+            "subscriptions": [
+                {
+                    "url": "/smart-notifier"
+                }
+            ],
+            "ui": false,
+            "readme": "readme.md",
+            "schedules": [],
+            "version": "0.1.0"
+        },
+        "secret": "e99bec00000c9bb9900000c00b0f0e99",
+        "updated_at": "2019-01-30T12:42:15Z",
+        "status": {
+            "updated_at": "2019-01-30T13:29:07Z",
+            "name": "Hull Custom Objects to Salesforce",
+            "id": "9c99e0909df9999999999b9a"
+        },
+        "id": "9c99e0909df9999999999b9a",
+        "picture": null,
+        "homepage_url": "https://09bb10b0.hullapp.io/ships/9c99e0909df9999999999b9a",
+        "manifest_url": "https://hull-salesforce-event-cobject.ngrok.io/manifest.json",
+        "created_at": "2019-01-18T14:20:01Z"
+    },
+    "channel": "user:update",
+    "messages": [
+        {
+            "user": {
+                "latest_session_initial_url": "https://www.testdrivehull.io/en-US",
+                "latest_session_platform_id": "5c37777226ba53b624021c7e",
+                "first_session_initial_referrer": "https://testdrivehull.io/signup",
+                "first_seen_at": "2019-01-22T09:24:15Z",
+                "id": "9c09e00f00ec990bcc00bc00",
+                "first_session_platform_id": "5c37777226ba53b624021c7e",
+                "signup_session_started_at": "2019-01-22T09:24:15Z",
+                "last_known_ip": "88.26.197.50",
+                "signup_session_initial_referrer": "https://testdrivehull.io/signup",
+                "latest_session_initial_referrer": "https://testdrivehull.io/signup",
+                "anonymous_ids": [
+                    "1548149055-fd5d1047-20bc-492a-ae25-d381885491da"
+                ],
+                "indexed_at": "2019-01-30T13:29:04+00:00",
+                "first_session_started_at": "2019-01-22T09:24:15Z",
+                "signup_session_platform_id": "5c37777226ba53b624021c7e",
+                "created_at": "2019-01-22T09:24:15Z",
+                "is_approved": false,
+                "signup_session_initial_url": "https://www.testdrivehull.io/en-US",
+                "latest_session_started_at": "2019-01-30T13:27:12Z",
+                "last_seen_at": "2019-01-30T13:27:12Z",
+                "first_session_initial_url": "https://www.testdrivehull.io/en-US",
+                "segment_ids": [
+                    "5c4a2d1c2bb88a222c03c9f4",
+                    "5c3775aab054ebb4d801383f"
+                ]
+            },
+            "account": {},
+            "segments": [
+                {
+                    "id": "5c4a2d1c2bb88a222c03c9f4",
+                    "name": "All website visitors",
+                    "updated_at": "2019-01-24T21:24:44Z",
+                    "type": "users_segment",
+                    "created_at": "2019-01-24T21:24:44Z"
+                },
+                {
+                    "id": "5c3775aab054ebb4d801383f",
+                    "name": "Empty LeadSources",
+                    "updated_at": "2019-01-10T16:41:14Z",
+                    "type": "users_segment",
+                    "created_at": "2019-01-10T16:41:14Z"
+                }
+            ],
+            "events": [
+                {
+                    "properties": {
+                        "initial_url": "https://www.testdrivehull.io/en-US",
+                        "referrer": "https://testdrivehull.io/signup"
+                    },
+                    "event_id": "1548854832-e1d8a7e1-267c-47cf-a046-34b180b75c5d",
+                    "user_id": "9c09e00f00ec990bcc00bc00",
+                    "event_source": "processor",
+                    "app_name": "Processor",
+                    "event": "Session started",
+                    "event_type": "track",
+                    "track_id": "5c51a69f9c9dd4609d042b35",
+                    "context": {
+                        "useragent": "Hull Node Client version: 1.2.2",
+                        "device": {
+                            "name": "Other"
+                        },
+                        "referrer": {
+                            "url": "https://testdrivehull.io/signup",
+                            "host": "testdrivehull.io",
+                            "path": "/signup",
+                            "campaign": {
+                                "term": null,
+                                "medium": null,
+                                "name": null,
+                                "content": null,
+                                "source": null
+                            }
+                        },
+                        "os": {
+                            "name": "Other",
+                            "version": ""
+                        },
+                        "browser": {
+                            "name": "Other"
+                        },
+                        "ip": "0"
+                    },
+                    "anonymous_id": null,
+                    "ship_id": null,
+                    "created_at": "2019-01-30 13:27:12 UTC",
+                    "session_id": null,
+                    "app_id": "5c3df932588778640b0103c6"
+                },
+                {
+                    "properties": {
+                        "initial_url": "https://www.testdrivehull.io/en-US",
+                        "referrer": "https://testdrivehull.io/signup"
+                    },
+                    "event_id": "1548843768-60efe8f8-f0f8-446c-8c69-56d14dbd28b1",
+                    "user_id": "9c09e00f00ec990bcc00bc00",
+                    "event_source": "processor",
+                    "app_name": "Processor",
+                    "event": "Session started",
+                    "event_type": "track",
+                    "track_id": "5c51a6a09c9dd4609d042b36",
+                    "context": {
+                        "useragent": "Hull Node Client version: 1.2.2",
+                        "device": {
+                            "name": "Other"
+                        },
+                        "referrer": {
+                            "url": "https://testdrivehull.io/signup",
+                            "host": "testdrivehull.io",
+                            "path": "/signup",
+                            "campaign": {
+                                "term": null,
+                                "medium": null,
+                                "name": null,
+                                "content": null,
+                                "source": null
+                            }
+                        },
+                        "os": {
+                            "name": "Other",
+                            "version": ""
+                        },
+                        "browser": {
+                            "name": "Other"
+                        },
+                        "ip": "0"
+                    },
+                    "anonymous_id": null,
+                    "ship_id": null,
+                    "created_at": "2019-01-30 10:22:48 UTC",
+                    "session_id": null,
+                    "app_id": "5c3df932588778640b0103c6"
+                },
+                {
+                    "properties": {
+                        "initial_url": "https://www.testdrivehull.io/en-US",
+                        "referrer": "https://testdrivehull.io/signup"
+                    },
+                    "event_id": "1548149055-89eb4abd-e915-47c1-9e83-3098e7f49996",
+                    "user_id": "9c09e00f00ec990bcc00bc00",
+                    "event_source": "processor",
+                    "app_name": "Processor",
+                    "event": "Session started",
+                    "event_type": "track",
+                    "track_id": "5c51a6a09c9dd4609d042b37",
+                    "context": {
+                        "useragent": "Hull Node Client version: 1.2.2",
+                        "device": {
+                            "name": "Other"
+                        },
+                        "referrer": {
+                            "url": "https://testdrivehull.io/signup",
+                            "host": "testdrivehull.io",
+                            "path": "/signup",
+                            "campaign": {
+                                "term": null,
+                                "medium": null,
+                                "name": null,
+                                "content": null,
+                                "source": null
+                            }
+                        },
+                        "os": {
+                            "name": "Other",
+                            "version": ""
+                        },
+                        "browser": {
+                            "name": "Other"
+                        },
+                        "ip": "0"
+                    },
+                    "anonymous_id": null,
+                    "ship_id": null,
+                    "created_at": "2019-01-22 09:24:15 UTC",
+                    "session_id": null,
+                    "app_id": "5c3df932588778640b0103c6"
+                }
+            ],
+            "account_segments": [],
+            "message_id": "6a8b9c78e1a55b2b6cf2c2445de12ea9ec48086e"
+        },
+        {
+            "user": {
+                "latest_session_initial_url": "https://www.testdrivehull.io/",
+                "latest_session_platform_id": "5c37777226ba53b624021c7e",
+                "first_session_initial_referrer": "",
+                "first_seen_at": "2019-01-28T14:59:18Z",
+                "id": "5c4f18c6d723a82ae1004092",
+                "first_session_platform_id": "5c37777226ba53b624021c7e",
+                "signup_session_started_at": "2019-01-28T14:59:18Z",
+                "last_known_ip": "8.8.8.8",
+                "signup_session_initial_referrer": "",
+                "latest_session_initial_referrer": "",
+                "anonymous_ids": [
+                    "1548687558-f2ecdf49-f231-4cd9-9dad-7d135ba31707"
+                ],
+                "indexed_at": "2019-01-30T13:29:04+00:00",
+                "first_session_started_at": "2019-01-28T14:59:18Z",
+                "signup_session_platform_id": "5c37777226ba53b624021c7e",
+                "created_at": "2019-01-28T14:59:18Z",
+                "is_approved": false,
+                "signup_session_initial_url": "https://www.testdrivehull.io/",
+                "latest_session_started_at": "2019-01-30T13:27:21Z",
+                "last_seen_at": "2019-01-30T13:27:21Z",
+                "first_session_initial_url": "https://www.testdrivehull.io/",
+                "segment_ids": [
+                    "5c4a2d1c2bb88a222c03c9f4",
+                    "5c3775aab054ebb4d801383f"
+                ]
+            },
+            "account": {},
+            "segments": [
+                {
+                    "id": "5c4a2d1c2bb88a222c03c9f4",
+                    "name": "All website visitors",
+                    "updated_at": "2019-01-24T21:24:44Z",
+                    "type": "users_segment",
+                    "created_at": "2019-01-24T21:24:44Z"
+                },
+                {
+                    "id": "5c3775aab054ebb4d801383f",
+                    "name": "Empty LeadSources",
+                    "updated_at": "2019-01-10T16:41:14Z",
+                    "type": "users_segment",
+                    "created_at": "2019-01-10T16:41:14Z"
+                }
+            ],
+            "events": [
+                {
+                    "properties": {
+                        "initial_url": "https://www.testdrivehull.io/"
+                    },
+                    "event_id": "1548854841-c5d99319-839f-4a0d-be05-d1fe166eb741",
+                    "user_id": "5c4f18c6d723a82ae1004092",
+                    "event_source": "processor",
+                    "app_name": "Processor",
+                    "event": "Session started",
+                    "event_type": "track",
+                    "track_id": "5c51a6a09c9dd4609d042b38",
+                    "context": {
+                        "useragent": "Hull Node Client version: 1.2.2",
+                        "device": {
+                            "name": "Other"
+                        },
+                        "os": {
+                            "name": "Other",
+                            "version": ""
+                        },
+                        "browser": {
+                            "name": "Other"
+                        },
+                        "ip": "0"
+                    },
+                    "anonymous_id": null,
+                    "ship_id": null,
+                    "created_at": "2019-01-30 13:27:21 UTC",
+                    "session_id": null,
+                    "app_id": "5c3df932588778640b0103c6"
+                },
+                {
+                    "properties": {
+                        "initial_url": "https://www.testdrivehull.io/"
+                    },
+                    "event_id": "1548687558-70c01a05-3c8b-4c24-8948-0c01042c2d00",
+                    "user_id": "5c4f18c6d723a82ae1004092",
+                    "event_source": "processor",
+                    "app_name": "Processor",
+                    "event": "Session started",
+                    "event_type": "track",
+                    "track_id": "5c51a6a09c9dd4609d042b39",
+                    "context": {
+                        "useragent": "Hull Node Client version: 1.2.2",
+                        "device": {
+                            "name": "Other"
+                        },
+                        "os": {
+                            "name": "Other",
+                            "version": ""
+                        },
+                        "browser": {
+                            "name": "Other"
+                        },
+                        "ip": "0"
+                    },
+                    "anonymous_id": null,
+                    "ship_id": null,
+                    "created_at": "2019-01-28 14:59:18 UTC",
+                    "session_id": null,
+                    "app_id": "5c3df932588778640b0103c6"
+                }
+            ],
+            "account_segments": [],
+            "message_id": "7a21b167c5af64456ba503b448e6c0df2ac458fe"
+        }
+    ],
+    "accounts_segments": [],
+    "segments": [
+        {
+            "id": "5c37ab7cf658584e4c021ba5",
+            "updated_at": "2019-01-23T17:15:08Z",
+            "created_at": "2019-01-10T20:30:52Z",
+            "name": "Active",
+            "type": "users_segment",
+            "stats": {}
+        },
+        {
+            "id": "5c4a2d1c2bb88a222c03c9f4",
+            "updated_at": "2019-01-24T21:24:44Z",
+            "created_at": "2019-01-24T21:24:44Z",
+            "name": "All website visitors",
+            "type": "users_segment",
+            "stats": {}
+        },
+        {
+            "id": "5c3775aab054ebb4d801383f",
+            "updated_at": "2019-01-10T16:41:14Z",
+            "created_at": "2019-01-10T16:41:14Z",
+            "name": "Empty LeadSources",
+            "type": "users_segment",
+            "stats": {}
+        }
+    ]
+}

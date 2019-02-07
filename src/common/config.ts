@@ -1,1 +1,1 @@
-export const SFDC_API_VERSION = "39.0";
+export const SFDC_API_VERSION = "42.0";

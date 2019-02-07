@@ -1,16 +1,16 @@
 import { HullAttribute } from "./common-types";
 
 export interface IHullUserClaims {
-    id: string;
-    email: string;
-    external_id: string;
-    anonymous_id: string;
+    id?: string | null | undefined;
+    email?: string | null | undefined;
+    external_id?: string | null | undefined;
+    anonymous_id?: string | null | undefined;
 }
 
 export default interface IHullUser {
     id: string;
-    email: string;
-    external_id: string;
-    anonymous_ids: string[];
+    email: string | null;
+    external_id: string | null;
+    anonymous_id: string | null;
     [propName: string]: HullAttribute;
 }

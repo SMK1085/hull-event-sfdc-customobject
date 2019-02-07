@@ -10,7 +10,7 @@ class EventSearchUtil {
         this._hullClient = hullClient;
     }
 
-    async fetchLatestEvents(userId: string, eventName: string): Promise<IHullUserEvent[]> {
+    public async fetchLatestEvents(userId: string, eventName: string): Promise<IHullUserEvent[]> {
         const params = {
             "page":0,
             "per_page":100,

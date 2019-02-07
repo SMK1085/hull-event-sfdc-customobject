@@ -6,7 +6,7 @@ import IHullAccount from "./account";
 
 export default interface IHullUserUpdateMessage {
     user: IHullUser;
-    changes: IHullUserChanges;
+    changes?: IHullUserChanges;
     segments: IHullSegment[];
     events: IHullUserEvent[];
     account?: IHullAccount;

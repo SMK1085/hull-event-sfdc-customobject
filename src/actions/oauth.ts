@@ -21,8 +21,11 @@ const oauthAction = () => {
             },
             isSetup: ({ query, hull }: any) => {
                 if (query.reset) return Promise.reject();
+                // tslint:disable-next-line:variable-name
                 const access_token = _.get(hull, "ship.private_settings.access_token", null);
+                // tslint:disable-next-line:variable-name
                 const refresh_token = _.get(hull, "ship.private_settings.refresh_token", null);
+                // tslint:disable-next-line:variable-name
                 const instance_url = _.get(hull, "ship.private_settings.instance_url", null);
                 
                 if (access_token && refresh_token && instance_url) {
@@ -37,8 +40,11 @@ const oauthAction = () => {
             onAuthorize: (req: Request) => {
                 const { helpers } = (req as any).hull;
                 const refreshToken = _.get(req, "account.refreshToken", null);
+                // tslint:disable-next-line:variable-name
                 const access_token = _.get(req, "account.params.access_token", null);
+                // tslint:disable-next-line:variable-name
                 const instance_url = _.get(req, "account.params.instance_url", null);
+                // tslint:disable-next-line:variable-name
                 const salesforce_login = _.get(req, "account.profile._raw.username");
                 return helpers.updateSettings({
                   refresh_token: refreshToken,

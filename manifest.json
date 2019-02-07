@@ -167,18 +167,7 @@
     "schedules": [],
     "subscriptions": [
         {
-            "url": "/smart-notifier",
-            "conditions": {
-                "channels": {
-                    "only": [
-                        "user:update",
-                        "ship:update",
-                        "users_segment:update",
-                        "accounts_segment:update",
-                        "segment:update"
-                    ]
-                }
-            }
+            "url": "/smart-notifier"
         }
     ]
 }
