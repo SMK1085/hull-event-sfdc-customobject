@@ -4,6 +4,8 @@
   "description": "Connector which synchronizes Hull Events to SFDC custom objects",
   "main": "index.ts",
   "scripts": {
+    "start": "npm run serve",
+    "serve": "node build/index.js",
     "type-check": "tsc --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
     "build": "npm run build:types && npm run build:js",
@@ -67,5 +69,10 @@
     "newrelic": "^5.1.0",
     "passport-forcedotcom": "^0.1.4",
     "request": "^2.88.0"
+  },
+  "engines": {
+    "node": "10.15.x",
+    "npm": "6.4.x",
+    "yarn": "1.13.x"
   }
 }
