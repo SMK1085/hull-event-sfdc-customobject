@@ -13,7 +13,8 @@
     "build:js": "babel src --out-dir build --extensions \".ts,.tsx\" --source-maps inline",
     "lint": "tslint src/**/*.{ts,tsx}",
     "serve-debug": "nodemon --inspect build/index.js",
-    "test": "jest --env=node --colors --coverage"
+    "test": "jest --env=node --colors --coverage",
+    "postinstall": "yarn run build"
   },
   "repository": {
     "type": "git",
