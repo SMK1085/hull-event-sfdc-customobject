@@ -5,7 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "start": "yarn run serve",
-    "serve": "yarn build/index.js",
+    "serve": "node build/index.js",
     "type-check": "tsc --noEmit",
     "type-check:watch": "yarn run type-check -- --watch",
     "build": "yarn run build:types && yarn run build:js",
@@ -14,7 +14,7 @@
     "lint": "tslint src/**/*.{ts,tsx}",
     "serve-debug": "nodemon --inspect build/index.js",
     "test": "jest --env=node --colors --coverage",
-    "postinstall": "yarn run build"
+    "postinstall": "yarn run build:js"
   },
   "repository": {
     "type": "git",
