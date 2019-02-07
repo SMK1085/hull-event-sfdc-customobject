@@ -42,7 +42,6 @@
     "@babel/core": "^7.2.2",
     "@babel/plugin-proposal-class-properties": "^7.2.3",
     "@babel/plugin-proposal-object-rest-spread": "^7.2.0",
-    "@babel/polyfill": "^7.2.5",
     "@babel/preset-env": "^7.2.3",
     "@babel/preset-typescript": "^7.1.0",
     "@types/cors": "^2.8.4",
@@ -60,6 +59,7 @@
     "tslint-config-standard": "^8.0.1"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.2.5",
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "hull": "^0.13.17",
