@@ -5,7 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "start": "yarn run serve",
-    "serve": "pm2 reload ecosystem.config.js --env production",
+    "serve": "pm2-runtime start ecosystem.config.js --env production",
     "type-check": "tsc --noEmit",
     "type-check:watch": "yarn run type-check -- --watch",
     "build": "yarn run build:types && yarn run build:js",
