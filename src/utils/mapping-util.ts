@@ -25,6 +25,8 @@ class MappingUtil {
 
         if (hullIdentifier === "id") { // It's labeled differently on non-batch operations
             if (_.get(event, hullIdentifier, _.get(event, "event_id", null)) === null) {
+                // tslint:disable-next-line:no-console
+                console.log("No hull id present");
                 return undefined;
             }    
         } else {
@@ -36,13 +38,13 @@ class MappingUtil {
         const result = {};
 
         _.forEach(referenceMappings, (r: IMappingEntry) => {
-            if (r.salesforce_field_name && r.hull_field_name) {
+            if (r.salesforce_field_name && r.hull_field_name && _.get(message.user, r.hull_field_name, null) !== null) {
                 _.set(result, r.salesforce_field_name, _.get(message.user, r.hull_field_name, null));
             }
         });
 
         _.forEach(attributeMappings, (m: IMappingEntry) => {
-            if (m.salesforce_field_name && m.hull_field_name) {
+            if (m.salesforce_field_name && m.hull_field_name && _.get(event, m.hull_field_name, null) !== null) {
                 if (m.hull_field_name === "created_at") {
                     _.set(result, m.salesforce_field_name, moment(_.get(event, m.hull_field_name as string, null)).toISOString());
                 } else {
@@ -57,6 +59,8 @@ class MappingUtil {
         } else {
             _.set(result, sfdcIdentifier, _.get(event, hullIdentifier, null));
         }
+
+        console.log("Mapping result", result);
 
         return result;
     }

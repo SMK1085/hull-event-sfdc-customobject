@@ -62,6 +62,7 @@ typings/
 
 # build directory
 build
+build-types
 
 # DS_Store
 *.DS_Store

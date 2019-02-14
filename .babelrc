@@ -8,8 +8,6 @@
         "@babel/proposal-object-rest-spread"
     ],
     "ignore": [
-        "**/*.spec.ts",
-        "**/*.test.ts",
         "**/*.d.ts"
     ]
 }

@@ -1,6 +1,6 @@
 {
   "name": "hull-event-sfdc-customobject",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Connector which synchronizes Hull Events to SFDC custom objects",
   "main": "index.ts",
   "scripts": {
@@ -13,7 +13,7 @@
     "build:js": "babel src --out-dir build --extensions \".ts,.tsx\" --source-maps inline",
     "lint": "tslint src/**/*.{ts,tsx}",
     "serve-debug": "nodemon --inspect build/index.js",
-    "test": "jest --env=node --colors --coverage",
+    "test": "jest --env=node --colors --coverage --no-cache",
     "postinstall": "yarn run build:js"
   },
   "repository": {
