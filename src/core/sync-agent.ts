@@ -130,10 +130,10 @@ class SyncAgent {
                         return r.success === false;
                     });
                     if (errors.length > 0) {
-                        this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
+                        await this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
                             .logger.error("outgoing.event.error", { changedRecords });
                     } else {
-                        this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
+                        await this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
                             .logger.log("outgoing.event.success", { changedRecords });
                     }
                 } else if (createdRecords) {
@@ -141,10 +141,10 @@ class SyncAgent {
                         return r.success === false;
                     });
                     if (errors.length > 0) {
-                        this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
+                        await this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
                             .logger.error("outgoing.event.error", { changedRecords: createdRecords });
                     } else {
-                        this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
+                        await this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
                             .logger.log("outgoing.event.success", { changedRecords: createdRecords });
                     }
                 } else if (updatedRecords) {
@@ -152,10 +152,10 @@ class SyncAgent {
                         return r.success === false;
                     });
                     if (errors.length > 0) {
-                        this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
+                        await this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
                             .logger.error("outgoing.event.error", { changedRecords: updatedRecords });
                     } else {
-                        this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
+                        await this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
                             .logger.log("outgoing.event.success", { changedRecords: updatedRecords });
                     }
                 }
@@ -215,10 +215,10 @@ class SyncAgent {
                             return r.success === false;
                         });
                         if (errors.length > 0) {
-                            this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
+                            await this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
                                 .logger.error("outgoing.event.error", { changedRecords });
                         } else {
-                            this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
+                            await this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
                                 .logger.log("outgoing.event.success", { changedRecords });
                         }
                     } else if (createdRecords) {
@@ -226,10 +226,10 @@ class SyncAgent {
                             return r.success === false;
                         });
                         if (errors.length > 0) {
-                            this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
+                            await this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
                                 .logger.error("outgoing.event.error", { changedRecords: createdRecords });
                         } else {
-                            this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
+                            await this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
                                 .logger.log("outgoing.event.success", { changedRecords: createdRecords });
                         }
                     } else if (updatedRecords) {
@@ -237,10 +237,10 @@ class SyncAgent {
                             return r.success === false;
                         });
                         if (errors.length > 0) {
-                            this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
+                            await this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
                                 .logger.error("outgoing.event.error", { changedRecords: updatedRecords });
                         } else {
-                            this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
+                            await this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
                                 .logger.log("outgoing.event.success", { changedRecords: updatedRecords });
                         }
                     }
