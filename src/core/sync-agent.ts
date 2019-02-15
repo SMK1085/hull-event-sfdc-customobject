@@ -1,5 +1,6 @@
 import { ConnectionOptions, FileProperties, Field, Record, RecordResult, SuccessResult, ErrorResult } from "jsforce";
 import _ from "lodash";
+import Bluebird from "bluebird";
 import IHullClient from "../common/data/hull-client";
 import SalesforceClient from "./sfdc-client";
 import IPrivateSettings from "../common/data/private-settings";
@@ -81,7 +82,7 @@ class SyncAgent {
             return Promise.resolve();
         }
 
-        _.forEach(messages, async (msg: IHullUserUpdateMessage) => {
+        await Bluebird.map(messages, async (msg: IHullUserUpdateMessage) => {
             if(isBatch) {
                 const events = await this._eventSearchUtil.fetchLatestEvents(msg.user.id, privateSettings.hull_event as string);
                 let sfdcObjects: Record[] = _.map(events, (e) => this._mappingUtil.mapOutgoingData(msg, e));
@@ -246,7 +247,7 @@ class SyncAgent {
                     }
                 }
             }
-        });
+        }, { concurrency: 10 });
 
         return Promise.resolve();
     }

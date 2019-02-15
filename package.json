@@ -44,6 +44,7 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.2.0",
     "@babel/preset-env": "^7.2.3",
     "@babel/preset-typescript": "^7.1.0",
+    "@types/bluebird": "^3.5.25",
     "@types/cors": "^2.8.4",
     "@types/express": "^4.16.0",
     "@types/jest": "^23.3.13",
@@ -60,6 +61,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
+    "bluebird": "^3.5.3",
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "hull": "^0.13.17",
