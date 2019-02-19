@@ -49,6 +49,8 @@ class MappingUtil {
                     if(_.isString(_.get(event, m.hull_field_name, null))) {
                         if(_.get(event, m.hull_field_name, "").length > 255) {
                             _.set(result, m.salesforce_field_name, _.get(event, m.hull_field_name, "").substr(0, 255));
+                        } else {
+                            _.set(result, m.salesforce_field_name, _.get(event, m.hull_field_name, null));
                         }
                     } else {
                         _.set(result, m.salesforce_field_name, _.get(event, m.hull_field_name, null));
@@ -63,6 +65,9 @@ class MappingUtil {
         } else {
             _.set(result, sfdcIdentifier, _.get(event, hullIdentifier, null));
         }
+
+        // tslint:disable-next-line:no-console
+        console.log("Resulting SFDC object", result);
 
         return result;
     }

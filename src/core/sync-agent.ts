@@ -40,6 +40,9 @@ class SyncAgent {
         this._filterUtil = new FilterUtil(privateSettings);
         this._mappingUtil = new MappingUtil(privateSettings);
         this._eventSearchUtil = new EventSearchUtil(this._hullClient);
+
+        // Bind this args
+        this._handleRecordResults = this._handleRecordResults.bind(this);
     }
 
     public listCustomObjects(): Promise<FileProperties[]> {
@@ -88,12 +91,22 @@ class SyncAgent {
                 let sfdcObjects: Record[] = _.map(events, (e) => this._mappingUtil.mapOutgoingData(msg, e));
                 sfdcObjects = _.filter(sfdcObjects, (o: Record | undefined) => o !== undefined);
 
+                // No results from mapping might indicate a problem with the mapping,
+                // so return immediately
+                if (sfdcObjects.length === 0) {
+                    await this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
+                        .logger.error("outgoing.event.error", { message: "Couldn't map the Hull event to the specified custom object." });
+                    return Promise.resolve();
+                }
+
+                // Query existing records via the configured unique identifier
                 const existingObjects = await this._sfdcClient.queryExistingRecords(
                     privateSettings.salesforce_customobject as string,
                     privateSettings.salesforce_customobject_id as string,
                     _.map(sfdcObjects, (o) => _.get(o, privateSettings.salesforce_customobject_id as string)) as string[]
                 );
 
+                // Determine objects to create and update
                 const objectsToCreate = _.filter(sfdcObjects, (o) => {
                     return _.findIndex(existingObjects, (eo) => {
                         return _.get(eo, privateSettings.salesforce_customobject_id as string) === 
@@ -115,6 +128,7 @@ class SyncAgent {
                     }).Id);
                 });
 
+                // Perform the calls to the SFDC API in batches
                 const createdRecords = await this._sfdcClient.createRecords(
                     privateSettings.salesforce_customobject as string,
                     objectsToCreate
@@ -124,132 +138,114 @@ class SyncAgent {
                     privateSettings.salesforce_customobject as string,
                     objectsToUpdate
                 );
-                
-                if (createdRecords && updatedRecords) {
-                    const changedRecords = _.concat(createdRecords, updatedRecords);
-                    const errors = _.filter(changedRecords, (r: RecordResult) => {
-                        return r.success === false;
-                    });
-                    if (errors.length > 0) {
-                        await this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
-                            .logger.error("outgoing.event.error", { changedRecords });
-                    } else {
-                        await this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
-                            .logger.log("outgoing.event.success", { changedRecords });
-                    }
-                } else if (createdRecords) {
-                    const errors = _.filter(createdRecords, (r: RecordResult) => {
-                        return r.success === false;
-                    });
-                    if (errors.length > 0) {
-                        await this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
-                            .logger.error("outgoing.event.error", { changedRecords: createdRecords });
-                    } else {
-                        await this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
-                            .logger.log("outgoing.event.success", { changedRecords: createdRecords });
-                    }
-                } else if (updatedRecords) {
-                    const errors = _.filter(updatedRecords, (r: RecordResult) => {
-                        return r.success === false;
-                    });
-                    if (errors.length > 0) {
-                        await this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
-                            .logger.error("outgoing.event.error", { changedRecords: updatedRecords });
-                    } else {
-                        await this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
-                            .logger.log("outgoing.event.success", { changedRecords: updatedRecords });
-                    }
-                }
+                // Last but not least log the result
+                await this._handleRecordResults(msg, createdRecords, updatedRecords);
+
             } else {
+
+                // Reduce processing to the whitelisted event only
                 const events = _.filter(msg.events, (e) => {
                     if (!e) {
                         return false;
                     }
                     return e.event === privateSettings.hull_event; 
                 });
-                if (events.length > 0) {
-
-                    let sfdcObjects: Record[] = _.map(events, (e) => this._mappingUtil.mapOutgoingData(msg, e));
-
-                    sfdcObjects = _.filter(sfdcObjects, (o: Record | undefined) => o !== undefined);
-
-                    const existingObjects = await this._sfdcClient.queryExistingRecords(
-                        privateSettings.salesforce_customobject as string,
-                        privateSettings.salesforce_customobject_id as string,
-                        _.map(sfdcObjects, (o) => _.get(o, privateSettings.salesforce_customobject_id as string)) as string[]
-                    );
-
-                    const objectsToCreate = _.filter(sfdcObjects, (o) => {
-                        return _.findIndex(existingObjects, (eo) => {
-                            return _.get(eo, privateSettings.salesforce_customobject_id as string) === 
-                                _.get(o, privateSettings.salesforce_customobject_id as string); 
-                        }) === -1;
-                    });
-                    const objectsToUpdate = _.filter(sfdcObjects, (o) => {
-                        return _.findIndex(existingObjects, (eo) => {
-                            return _.get(eo, privateSettings.salesforce_customobject_id as string) === 
-                                _.get(o, privateSettings.salesforce_customobject_id as string);
-                        }) !== -1;
-                    });
-
-                    // Attach the Id for records to update, otherwise SFDC will fail
-                    _.forEach(objectsToUpdate, (o) => {
-                        _.set(o, "Id", _.find(existingObjects, (eo) => {
-                            return _.get(eo, privateSettings.salesforce_customobject_id as string) === 
-                                _.get(o, privateSettings.salesforce_customobject_id as string);
-                        }).Id);
-                    }); 
-
-                    const createdRecords = await this._sfdcClient.createRecords(
-                        privateSettings.salesforce_customobject as string,
-                        objectsToCreate
-                    );
-
-                    const updatedRecords = await this._sfdcClient.updateRecords(
-                        privateSettings.salesforce_customobject as string,
-                        objectsToUpdate
-                    );
-                    
-                    if (createdRecords && updatedRecords) {
-                        const changedRecords = _.concat(createdRecords, updatedRecords);
-                        const errors = _.filter(changedRecords, (r: RecordResult) => {
-                            return r.success === false;
-                        });
-                        if (errors.length > 0) {
-                            await this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
-                                .logger.error("outgoing.event.error", { changedRecords });
-                        } else {
-                            await this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
-                                .logger.log("outgoing.event.success", { changedRecords });
-                        }
-                    } else if (createdRecords) {
-                        const errors = _.filter(createdRecords, (r: RecordResult) => {
-                            return r.success === false;
-                        });
-                        if (errors.length > 0) {
-                            await this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
-                                .logger.error("outgoing.event.error", { changedRecords: createdRecords });
-                        } else {
-                            await this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
-                                .logger.log("outgoing.event.success", { changedRecords: createdRecords });
-                        }
-                    } else if (updatedRecords) {
-                        const errors = _.filter(updatedRecords, (r: RecordResult) => {
-                            return r.success === false;
-                        });
-                        if (errors.length > 0) {
-                            await this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
-                                .logger.error("outgoing.event.error", { changedRecords: updatedRecords });
-                        } else {
-                            await this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
-                                .logger.log("outgoing.event.success", { changedRecords: updatedRecords });
-                        }
-                    }
+                // If no events are to be processed, return immediately
+                if (events.length === 0) {
+                    return Promise.resolve();
                 }
+                // Map the event data to SFDC Record objects
+                let sfdcObjects: Record[] = _.map(events, (e) => this._mappingUtil.mapOutgoingData(msg, e));
+                sfdcObjects = _.filter(sfdcObjects, (o: Record | undefined) => o !== undefined);
+                // No results from mapping might indicate a problem with the mapping,
+                // so return immediately
+                if (sfdcObjects.length === 0) {
+                    await this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
+                        .logger.error("outgoing.event.error", { message: "Couldn't map the Hull event to the specified custom object." });
+                    return Promise.resolve();
+                }
+
+                // Fetch existing records from SFDC
+                const existingObjects = await this._sfdcClient.queryExistingRecords(
+                    privateSettings.salesforce_customobject as string,
+                    privateSettings.salesforce_customobject_id as string,
+                    _.map(sfdcObjects, (o) => _.get(o, privateSettings.salesforce_customobject_id as string)) as string[]
+                );
+
+                // Determine which are new objects and which are existing ones to update
+                const objectsToCreate = _.filter(sfdcObjects, (o) => {
+                    return _.findIndex(existingObjects, (eo) => {
+                        return _.get(eo, privateSettings.salesforce_customobject_id as string) === 
+                            _.get(o, privateSettings.salesforce_customobject_id as string); 
+                    }) === -1;
+                });
+                const objectsToUpdate = _.filter(sfdcObjects, (o) => {
+                    return _.findIndex(existingObjects, (eo) => {
+                        return _.get(eo, privateSettings.salesforce_customobject_id as string) === 
+                            _.get(o, privateSettings.salesforce_customobject_id as string);
+                    }) !== -1;
+                });
+
+                // Attach the Id for records to update, otherwise SFDC will fail
+                _.forEach(objectsToUpdate, (o) => {
+                    _.set(o, "Id", _.find(existingObjects, (eo) => {
+                        return _.get(eo, privateSettings.salesforce_customobject_id as string) === 
+                            _.get(o, privateSettings.salesforce_customobject_id as string);
+                    }).Id);
+                }); 
+                // Perform the calls to the SFDC API in batches
+                const createdRecords = await this._sfdcClient.createRecords(
+                    privateSettings.salesforce_customobject as string,
+                    objectsToCreate
+                );
+                const updatedRecords = await this._sfdcClient.updateRecords(
+                    privateSettings.salesforce_customobject as string,
+                    objectsToUpdate
+                );
+                // Last but not least log the result
+                await this._handleRecordResults(msg, createdRecords, updatedRecords);
             }
         }, { concurrency: 10 });
 
         return Promise.resolve();
+    }
+
+    private async _handleRecordResults(msg: IHullUserUpdateMessage, createdRecords: RecordResult[] | undefined, updatedRecords: RecordResult[] | undefined) {
+        if (createdRecords && updatedRecords) {
+            const changedRecords = _.concat(createdRecords, updatedRecords);
+            const errors = _.filter(changedRecords, (r: RecordResult) => {
+                return r.success === false;
+            });
+            if (errors.length > 0) {
+                await this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
+                    .logger.error("outgoing.event.error", { changedRecords });
+            } else {
+                await this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
+                    .logger.log("outgoing.event.success", { changedRecords });
+            }
+        } else if (createdRecords) {
+            const errors = _.filter(createdRecords, (r: RecordResult) => {
+                return r.success === false;
+            });
+            if (errors.length > 0) {
+                await this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
+                    .logger.error("outgoing.event.error", { changedRecords: createdRecords });
+            } else {
+                await this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
+                    .logger.log("outgoing.event.success", { changedRecords: createdRecords });
+            }
+        } else if (updatedRecords) {
+            const errors = _.filter(updatedRecords, (r: RecordResult) => {
+                return r.success === false;
+            });
+            if (errors.length > 0) {
+                await this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
+                    .logger.error("outgoing.event.error", { changedRecords: updatedRecords });
+            } else {
+                await this._hullClient.asUser(_.pick(msg.user, ["id", "external_id", "email"]))
+                    .logger.log("outgoing.event.success", { changedRecords: updatedRecords });
+            }
+        }
     }
 }
 

@@ -18,7 +18,5 @@ export default interface IPrivateSettings {
     salesforce_oauth_url: string;
     // Added in v0.1.1
     hull_events?: string[];
-    synchronized_segments_ignore?: boolean;
-    synchronized_segments?: string[];
-
+    skip_objects_with_no_reference?: boolean;
 }

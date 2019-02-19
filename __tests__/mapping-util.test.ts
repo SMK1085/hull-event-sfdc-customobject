@@ -13,19 +13,10 @@ describe("MappingUtil", () => {
         const event: IHullUserEvent = msg.events[0];
         const actual = util.mapOutgoingData(msg, event);
         const expected = {
-            Account_id__c: null,
-            Contact_id__c: null,
-            Google_Ads_CID__c: null,
             Hull_Session_ID__c: "1548854832-e1d8a7e1-267c-47cf-a046-34b180b75c5d",
-            Lead_id__c: null,
             Session_Start_Time__c: "2019-01-30T13:27:12.000Z",
             initial_url__c: "https://www.testdrivehull.io/en-US",
-            pi_campaign_id__c: null,
             referrer__c: "https://testdrivehull.io/signup",
-            utm_campaign__c: null,
-            utm_medium__c: null,
-            utm_source__c: null,
-            utm_term__c: null,
         };
         expect(actual).toEqual(expected);
     });
@@ -38,19 +29,10 @@ describe("MappingUtil", () => {
         const event: IHullUserEvent = msg.events[0];
         const actual = util.mapOutgoingData(msg, event);
         const expected = {
-            Account_id__c: null,
-            Contact_id__c: null,
-            Google_Ads_CID__c: null,
             Hull_Session_ID__c: "5c51a69f9c9dd4609d042b35",
-            Lead_id__c: null,
             Session_Start_Time__c: "2019-01-30T13:27:12.000Z",
             initial_url__c: "https://www.testdrivehull.io/en-US",
-            pi_campaign_id__c: null,
             referrer__c: "https://testdrivehull.io/signup",
-            utm_campaign__c: null,
-            utm_medium__c: null,
-            utm_source__c: null,
-            utm_term__c: null,
         };
         expect(actual).toEqual(expected);
     });
@@ -64,19 +46,10 @@ describe("MappingUtil", () => {
         const event: IHullUserEvent = msg.events[0];
         const actual = util.mapOutgoingData(msg, event);
         const expected = {
-            Account_id__c: null,
-            Contact_id__c: null,
-            Google_Ads_CID__c: null,
             Hull_Session_ID__c: "1548854832-e1d8a7e1-267c-47cf-a046-34b180b75c5d",
-            Lead_id__c: null,
             Session_Start_Time__c: "2019-01-30T13:27:12.000Z",
             initial_url__c: "https://www.testdrivehull.io/en-US",
-            pi_campaign_id__c: null,
             referrer__c: "https://testdrivehull.io/signup",
-            utm_campaign__c: null,
-            utm_medium__c: null,
-            utm_source__c: null,
-            utm_term__c: null,
         };
         expect(actual).toEqual(expected);
     });
