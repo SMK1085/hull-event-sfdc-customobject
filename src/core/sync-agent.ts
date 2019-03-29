@@ -90,7 +90,6 @@ class SyncAgent {
                 const events = await this._eventSearchUtil.fetchLatestEvents(msg.user.id, privateSettings.hull_event as string);
                 let sfdcObjects: Record[] = _.map(events, (e) => this._mappingUtil.mapOutgoingData(msg, e));
                 sfdcObjects = _.filter(sfdcObjects, (o: Record | undefined) => o !== undefined);
-
                 // No results from mapping might indicate a problem with the mapping,
                 // so return immediately
                 if (sfdcObjects.length === 0) {

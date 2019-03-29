@@ -19,7 +19,7 @@ class MappingUtil {
         const referenceMappings = this._connectorSettings.references_outbound;
         const attributeMappings = this._connectorSettings.attributes_outbound;
 
-        if (!sfdcIdentifier || !hullIdentifier) { 
+        if (!sfdcIdentifier || !hullIdentifier) {
             return undefined;
         }
 
@@ -42,12 +42,16 @@ class MappingUtil {
         });
 
         _.forEach(attributeMappings, (m: IMappingEntry) => {
-            if (m.salesforce_field_name && m.hull_field_name && _.get(event, m.hull_field_name, null) !== null) {
-                if (m.hull_field_name.startsWith("user.")) {
+            if (m.hull_field_name && m.hull_field_name.startsWith("user.") === true) {
+                if (m.salesforce_field_name && _.get(message.user, m.hull_field_name.replace("user.", ""), null) !== null) {
                     _.set(result, m.salesforce_field_name, _.get(message.user, m.hull_field_name.replace("user.", ""), null));
-                } else if(m.hull_field_name.startsWith("account.")) {
-                    _.set(result, m.salesforce_field_name, _.get(message.account, m.hull_field_name.replace("account.", ""), null));
-                } else if (m.hull_field_name === "created_at") {
+                }
+            } else if(m.hull_field_name && m.hull_field_name.startsWith("account.") === true) {
+                if (m.salesforce_field_name && _.get(message.user, m.hull_field_name.replace("account.", ""), null) !== null) {
+                    _.set(result, m.salesforce_field_name, _.get(message.user, m.hull_field_name.replace("account.", ""), null));
+                }
+            } else if (m.salesforce_field_name && m.hull_field_name && _.get(event, m.hull_field_name, null) !== null) {
+                if (m.hull_field_name === "created_at") {
                     _.set(result, m.salesforce_field_name, moment(_.get(event, m.hull_field_name as string, null)).toISOString());
                 } else {
                     if(_.isString(_.get(event, m.hull_field_name, null))) {
@@ -59,8 +63,7 @@ class MappingUtil {
                     } else {
                         _.set(result, m.salesforce_field_name, _.get(event, m.hull_field_name, null));
                     }
-                }
-                
+                }   
             }
         });
 
@@ -69,9 +72,6 @@ class MappingUtil {
         } else {
             _.set(result, sfdcIdentifier, _.get(event, hullIdentifier, null));
         }
-
-        // tslint:disable-next-line:no-console
-        console.log("Resulting SFDC object", result);
 
         return result;
     }
