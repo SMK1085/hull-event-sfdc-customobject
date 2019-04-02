@@ -17,7 +17,7 @@
             "editable": false
         }
     ],
-    "version": "0.1.0",
+    "version": "0.1.2",
     "source": "salesforce",
     "logo": "logo.png",
     "ui": false,
@@ -53,6 +53,12 @@
             "name": "client_secret",
             "title": "Client Secret",
             "type": "string"
+        },
+        {
+            "name": "disable_sync",
+            "title": "DISABLE SYNC",
+            "type": "boolean",
+            "default": false
         },
         {
             "name": "heading_objectselection",

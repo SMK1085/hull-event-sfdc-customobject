@@ -71,7 +71,8 @@ class SyncAgent {
             !privateSettings.hull_event_id || privateSettings.hull_event_id.trim().length === 0 ||
             !privateSettings.instance_url || privateSettings.instance_url.trim().length === 0 ||
             !privateSettings.salesforce_customobject || privateSettings.salesforce_customobject.trim().length === 0 ||
-            !privateSettings.salesforce_customobject_id || privateSettings.salesforce_customobject_id.trim().length === 0) {
+            !privateSettings.salesforce_customobject_id || privateSettings.salesforce_customobject_id.trim().length === 0 ||
+            _.get(privateSettings, "disable_sync", false) === true) {
             // The connector is not in an operational state,
             // so return immediately
             return Promise.resolve();

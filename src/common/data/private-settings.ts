@@ -19,4 +19,6 @@ export default interface IPrivateSettings {
     // Added in v0.1.1
     hull_events?: string[];
     skip_objects_with_no_reference?: boolean;
+    // Added in v0.1.2
+    disable_sync?: boolean;
 }
