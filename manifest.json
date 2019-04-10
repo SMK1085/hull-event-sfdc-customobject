@@ -17,7 +17,7 @@
             "editable": false
         }
     ],
-    "version": "0.1.2",
+    "version": "0.1.3",
     "source": "salesforce",
     "logo": "logo.png",
     "ui": false,
@@ -68,9 +68,16 @@
         },
         {
             "name": "hull_event",
-            "title": "Hull Event",
+            "title": "Hull Event (deprecated, use Hull Events below)",
             "format": "event",
             "type": "string"
+        },
+        {
+            "name": "hull_events",
+            "title": "Hull Events",
+            "format": "event",
+            "type": "array",
+            "default": []
         },
         {
             "name": "salesforce_customobject",
@@ -107,6 +114,12 @@
             "type": "string",
             "format": "title",
             "title": "Reference Mapping"
+        },
+        {
+            "name": "skip_objects_with_no_reference",
+            "type": "boolean",
+            "default": false,
+            "title": "Skip synchronization if custom object has no reference to another object in Salesforce"
         },
         {
             "name" : "references_outbound",

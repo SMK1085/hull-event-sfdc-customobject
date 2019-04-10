@@ -67,7 +67,8 @@ class SyncAgent {
         if (!privateSettings.access_token || privateSettings.access_token.trim().length === 0 ||
             !privateSettings.client_id || privateSettings.client_id.trim().length === 0 ||
             !privateSettings.client_secret || privateSettings.client_secret.trim().length === 0 ||
-            !privateSettings.hull_event || privateSettings.hull_event.trim().length === 0 ||
+            (privateSettings.hull_event === undefined && privateSettings.hull_events === undefined) ||
+            (privateSettings.hull_events && privateSettings.hull_events.length === 0 && privateSettings.hull_event && privateSettings.hull_event.trim().length === 0) ||
             !privateSettings.hull_event_id || privateSettings.hull_event_id.trim().length === 0 ||
             !privateSettings.instance_url || privateSettings.instance_url.trim().length === 0 ||
             !privateSettings.salesforce_customobject || privateSettings.salesforce_customobject.trim().length === 0 ||
@@ -90,6 +91,8 @@ class SyncAgent {
             if(isBatch) {
                 const events = await this._eventSearchUtil.fetchLatestEvents(msg.user.id, privateSettings.hull_event as string);
                 let sfdcObjects: Record[] = _.map(events, (e) => this._mappingUtil.mapOutgoingData(msg, e));
+                // Allow the user to exclude objects without reference mappings
+
                 sfdcObjects = _.filter(sfdcObjects, (o: Record | undefined) => o !== undefined);
                 // No results from mapping might indicate a problem with the mapping,
                 // so return immediately
@@ -148,7 +151,12 @@ class SyncAgent {
                     if (!e) {
                         return false;
                     }
-                    return e.event === privateSettings.hull_event; 
+
+                    if (privateSettings.hull_events && privateSettings.hull_events.length > 0) {
+                        return privateSettings.hull_events.includes(e.event);
+                    } else {
+                        return e.event === privateSettings.hull_event; 
+                    }
                 });
                 // If no events are to be processed, return immediately
                 if (events.length === 0) {

@@ -1,6 +1,6 @@
 {
   "name": "hull-event-sfdc-customobject",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Connector which synchronizes Hull Events to SFDC custom objects",
   "main": "index.ts",
   "scripts": {
