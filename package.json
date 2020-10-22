@@ -4,17 +4,18 @@
   "description": "Connector which synchronizes Hull Events to SFDC custom objects",
   "main": "index.ts",
   "scripts": {
-    "start": "yarn run serve",
+    "start": "npm run serve",
     "serve": "pm2-runtime start ecosystem.config.js --env production",
     "type-check": "tsc --noEmit",
-    "type-check:watch": "yarn run type-check -- --watch",
-    "build": "yarn run build:types && yarn run build:js",
+    "type-check:watch": "npm run type-check -- --watch",
+    "build": "npm run build:types && npm run build:js",
     "build:types": "tsc --emitDeclarationOnly",
     "build:js": "babel src --out-dir build --extensions \".ts,.tsx\" --source-maps inline",
     "lint": "tslint src/**/*.{ts,tsx}",
     "serve-debug": "nodemon --inspect build/index.js",
     "test": "jest --env=node --colors --coverage --no-cache",
-    "postinstall": "yarn run build:js"
+    "postinstall": "npm run build:js",
+    "ngrok": "ngrok http 8082 --subdomain=hull-event-sfdc"
   },
   "repository": {
     "type": "git",
@@ -44,12 +45,12 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.2.0",
     "@babel/preset-env": "^7.2.3",
     "@babel/preset-typescript": "^7.1.0",
-    "@types/bluebird": "^3.5.25",
+    "@types/bluebird": "^3.5.32",
     "@types/cors": "^2.8.4",
     "@types/express": "^4.16.0",
     "@types/jest": "^23.3.13",
-    "@types/jsforce": "^1.9.3",
-    "@types/lodash": "^4.14.120",
+    "@types/jsforce": "^1.9.23",
+    "@types/lodash": "^4.14.162",
     "@types/winston": "^2.4.4",
     "babel-jest": "^24.0.0",
     "jest": "^24.0.0",
@@ -73,10 +74,5 @@
     "pm2": "^3.2.9",
     "request": "^2.88.0",
     "typescript": "^3.2.4"
-  },
-  "engines": {
-    "node": "10.15.x",
-    "npm": "6.4.x",
-    "yarn": "1.13.x"
   }
 }

@@ -10,24 +10,34 @@ class EventSearchUtil {
         this._hullClient = hullClient;
     }
 
-    public async fetchLatestEvents(userId: string, eventName: string): Promise<IHullUserEvent[]> {
+    public async fetchLatestEvents(userId: string, eventName: string, limit = 100, asc = true): Promise<IHullUserEvent[]> {
         const params = {
-            "page":0,
-            "per_page":100,
-            "raw":true,
-            "sort":{
-              "created_at":"desc"
-            },"query":{
-              "bool":{
-                "should":[
-                  {"term":{
-                    "_parent":userId
-                  }}
-                ],
-                "minimum_should_match":1,
-                "filter":[{"terms":{"event":[eventName]}}]
+          "page":0,
+          "per_page":limit,
+          "raw":true,
+          "sort":{
+            "created_at": asc ? "asc" : "desc"
+          },
+          "query":{
+            "bool":{
+              "filter":[
+                {
+                  "parent_id":{
+                    "type":"event",
+                    "id": userId
+                  }
+                  
+                },
+                {
+                  "terms":{
+                    "event":[
+                      eventName
+                      ]
+                  }
                 }
+              ]
             }
+          }
         };
 
         const response = await this._hullClient.post("search/events", params);

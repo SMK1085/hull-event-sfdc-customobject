@@ -6,5 +6,9 @@ module.exports = {
     testPathIgnorePatterns: ["/lib/", "/node_modules/", "/build/", "/build-types/"],
     moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
     collectCoverage: true,
-    testEnvironment: "node"
+    testEnvironment: "node",
+    transformIgnorePatterns: [
+        "/build/*", 
+        "/build-types/*"
+    ]
 };

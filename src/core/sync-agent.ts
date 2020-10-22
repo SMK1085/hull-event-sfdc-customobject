@@ -90,6 +90,7 @@ class SyncAgent {
         await Bluebird.map(messages, async (msg: IHullUserUpdateMessage) => {
             if(isBatch) {
                 const events = await this._eventSearchUtil.fetchLatestEvents(msg.user.id, privateSettings.hull_event as string);
+                console.log(events);
                 let sfdcObjects: Record[] = _.map(events, (e) => this._mappingUtil.mapOutgoingData(msg, e));
                 // Allow the user to exclude objects without reference mappings
 
